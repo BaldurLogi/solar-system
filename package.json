@@ -17,12 +17,12 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "mocha-junit-reporter": "^2.2.1",
-    "mongoose": "^7.8.6",
-    "nyc": "^15.1.0"
+    "mongoose": "^7.8.6"
   },
   "devDependencies": {
     "chai": "*",
     "chai-http": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "nyc": "^15.1.0"
   }
 }
