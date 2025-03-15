@@ -11,18 +11,11 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
 
-mongoose.connect(process.env.MONGO_URI, {
-    user: process.env.MONGO_USERNAME,
-    pass: process.env.MONGO_PASSWORD,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}, function(err) {
-    if (err) {
-        console.log("error!! " + err)
-    } else {
-      //  console.log("MongoDB Connection Successful")
-    }
-})
+mongoose.connect(
+    'mongodb+srv://superuser:SuperPassword@supercluster.d83jj.mongodb.net/superData?retryWrites=true&w=majority',
+  )
+    .then(() => console.log("MongoDB Connection Successful"))
+    .catch(err => console.error("Error connecting to MongoDB:", err));
 
 var Schema = mongoose.Schema;
 
@@ -36,52 +29,54 @@ var dataSchema = new Schema({
 });
 var planetModel = mongoose.model('planets', dataSchema);
 
+app.post('/planet', async (req, res) => {
+    try {
+      // findOne returns a promise in Mongoose 7
+      const planetData = await planetModel.findOne({ id: req.body.id });
 
+      if (!planetData) {
+        // Instead of alert (which doesn't exist on the server),
+        // respond with a 404 or custom message:
+        return res.status(404).send("Planet not found. Select a number from 0 - 9");
+      }
 
-app.post('/planet',   function(req, res) {
-   // console.log("Received Planet ID " + req.body.id)
-    planetModel.findOne({
-        id: req.body.id
-    }, function(err, planetData) {
-        if (err) {
-            alert("Ooops, We only have 9 planets and a sun. Select a number from 0 - 9")
-            res.send("Error in Planet Data")
-        } else {
-            res.send(planetData);
-        }
-    })
-})
+      // If found, send the planet data
+      return res.json(planetData);
+    } catch (err) {
+      // Handle any errors that occurred during lookup
+      console.error("Error fetching planet data:", err);
+      return res.status(500).send("Error fetching planet data");
+    }
+});
 
-app.get('/',   async (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/', 'index.html'));
 });
 
-
-app.get('/os',   function(req, res) {
+app.get('/os', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send({
-        "os": OS.hostname(),
-        "env": process.env.NODE_ENV
+      "os": OS.hostname(),
+      "env": process.env.NODE_ENV
     });
-})
+});
 
-app.get('/live',   function(req, res) {
+app.get('/live', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send({
-        "status": "live"
+      "status": "live"
     });
-})
+});
 
-app.get('/ready',   function(req, res) {
+app.get('/ready', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send({
-        "status": "ready"
+      "status": "ready"
     });
-})
+});
 
 app.listen(3000, () => {
-    console.log("Server successfully running on port - " +3000);
-})
-
+    console.log("Server successfully running on port 3000");
+});
 
 module.exports = app;
