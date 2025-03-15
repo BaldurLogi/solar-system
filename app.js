@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
 
 mongoose.connect(
-    'mongodb+srv://superuser:SuperPassword@supercluster.d83jj.mongodb.net/superData?retryWrites=true&w=majority',
+    process.env.MONGO_URI,
   )
     .then(() => console.log("MongoDB Connection Successful"))
     .catch(err => console.error("Error connecting to MongoDB:", err));
