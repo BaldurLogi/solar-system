@@ -85,6 +85,8 @@ jobs:
     docker:
       name: Containerization
       needs: [unit-testing, code-coverage]
+      permissions:
+        packages: write
       runs-on: ubuntu-latest
       steps:
         - name: Checkout Repo
@@ -134,4 +136,3 @@ jobs:
             tags: |
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
               ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-              
