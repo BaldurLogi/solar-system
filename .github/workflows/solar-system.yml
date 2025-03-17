@@ -16,6 +16,15 @@ env:
 jobs:
     unit-testing:
         name: Unit Testing
+        services:
+          mongo-db:
+            image: baldurlogi1/solar-system:68d276ab3ab6278de8a4edd2b644a764e3ecef84
+            ports:
+              - 27017:27017
+            env:
+              MONGO_URI: 'mongodb//localhost:27017/superData'
+              MONGO_USERNAME: non-prod-user
+              MONGO_PASSWORD: non-prod-password
         strategy:
             matrix:
                 nodejs_version: [18, 20]
